@@ -1,1 +1,1 @@
-this is a readme file 
+This is a trash game where you shoot mouse at a cheese moon
