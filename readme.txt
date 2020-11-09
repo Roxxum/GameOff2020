@@ -1,1 +1,1 @@
-This is a trash game where you shoot mouse at a cheese moon
+This is a trash game where you shoot mice at a cheese moon for some reason
