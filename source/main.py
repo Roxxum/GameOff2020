@@ -7,9 +7,9 @@ def main():
     # initialize the pygame module
     pygame.init()
     # load and set the logo
-    logo = pygame.image.load("assets/logo32x32.png")
+    logo = pygame.image.load("assets/logo.png")
     pygame.display.set_icon(logo)
-    pygame.display.set_caption("minimal program")
+    pygame.display.set_caption("MoonShot")
      
     # create a surface on screen that has the size of set width,height
     screen = pygame.display.set_mode((800,600))
