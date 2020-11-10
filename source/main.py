@@ -6,16 +6,37 @@ def main():
      
     # initialize the pygame module
     pygame.init()
-    # load and set the logo
-    logo = pygame.image.load("assets/logo.png")
-    pygame.display.set_icon(logo)
+
+    # load assets
+    logoIMG = pygame.image.load("assets/logo.png")
+    playerIMG = pygame.image.load("assets/player.png")
+    cheeseIMG = pygame.image.load("assets/cheese.png")
+
+    # set assets
+    pygame.display.set_icon(logoIMG)
     pygame.display.set_caption("MoonShot")
-     
-    # create a surface on screen that has the size of set width,height
-    screen = pygame.display.set_mode((800,600))
+
+    # set variables 
+    clock = pygame.time.Clock()
+    display_width = 800
+    display_height = 600
+    black = (0,0,0)
+    white = (255,255,255)
+    red = (255,0,0)
+    green = (0,255,0)
+    blue = (0,0,255)
+    screen = pygame.display.set_mode((display_width,display_height))
+    player_start_x = (display_width * 0.45)
+    player_start_y = (display_height * 0.8)
+    player_x = 0
+    player_y = 0
      
     # define a variable to control the main loop
     running = True
+
+    # define a function to control the player
+    def player(player_start_x,player__start_y):
+        screen.blit(playerIMG, (player_start_x,player_start_y))
      
     # main loop
     while running:
@@ -25,7 +46,26 @@ def main():
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop
                 running = False
-     
+            # add statements to change position on key press
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    player_x = -5
+                elif event.key == pygame.K_RIGHT:
+                    player_x = 5
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    player_x = 0
+        # change player location
+        player_start_x += player_x
+        # set background colour
+        screen.fill(white)
+        # display player
+        player(player_start_x, player_start_y)
+        # load new frames each tick
+        pygame.display.update()
+        # set the frame rate 
+        clock.tick(15)
      
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)
