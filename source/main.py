@@ -10,7 +10,7 @@ def main():
     # load assets
     logoIMG = pygame.image.load("assets/logo.png")
     playerIMG = pygame.image.load("assets/player.png")
-    cheeseIMG = pygame.image.load("assets/cheese.png")
+    moonIMG = pygame.image.load("assets/cheese.png")
 
     # set assets
     pygame.display.set_icon(logoIMG)
@@ -30,13 +30,21 @@ def main():
     player_start_y = (display_height * 0.8)
     player_x = 0
     player_y = 0
+    moon_start_x = (display_width * 0.9)
+    moon_start_y = (display_height * 0.1)
+    moon_x = 0
+    moon_y = 0
      
     # define a variable to control the main loop
     running = True
 
     # define a function to control the player
-    def player(player_start_x,player__start_y):
+    def player(player_start_x,player_start_y):
         screen.blit(playerIMG, (player_start_x,player_start_y))
+
+    # define a function to control the moon
+    def moon(moon_start_x,moon_start_y):
+        screen.blit(moonIMG, (moon_start_x,moon_start_y))
      
     # main loop
     while running:
@@ -52,16 +60,17 @@ def main():
                     player_x = -5
                 elif event.key == pygame.K_RIGHT:
                     player_x = 5
-
+            # add statement to handle key up
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     player_x = 0
-        # change player location
+        # change asset locations
         player_start_x += player_x
         # set background colour
         screen.fill(white)
-        # display player
+        # display assets
         player(player_start_x, player_start_y)
+        moon(moon_start_x, moon_start_y)
         # load new frames each tick
         pygame.display.update()
         # set the frame rate 
