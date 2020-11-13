@@ -47,8 +47,8 @@ def main():
     moon_y = 0
     mice_width = 50
     mice_height = 60
-    mice_start_x = (display_width * 0.45)
-    mice_start_y = (display_height * 0.8)
+    mice_start_x = (0 - mice_width)
+    mice_start_y = (0 - mice_height)
     mice_x = 0
     mice_y = 0
      
@@ -76,7 +76,7 @@ def main():
             if event.type == pygame.QUIT:
                 # change the value to False, to exit the main loop
                 running = False
-            # add statements to change position on key press
+            # add statements to move cannon
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     if cannon_start_x > 5:
@@ -84,29 +84,45 @@ def main():
                     if cannon_start_x < 5:
                         break
                 elif event.key == pygame.K_RIGHT:
-                    if cannon_start_x < display_width - cannon_width:
+                    if cannon_start_x < (display_width - cannon_width):
                         cannon_x = 5
-                    if cannon_start_x > display_width - cannon_width:
+                    if cannon_start_x > (display_width - cannon_width):
                         break
-            # add statement to handle key up
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     cannon_x = 0
+
+            # add statements to shoot mice
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if mice_start_y <= (0 - mice_height):
+                        mice_start_y = (cannon_start_y - mice_height)
+                        mice_start_x = (cannon_start_x + mice_width)
+                    if mice_start_y > 5:
+                        break
 
         # add statements to change position of moon
         if moon_start_x < display_width:
             moon_x = 5
         if moon_start_x > display_width:
             moon_x = 0
-            moon_start_x = 0 - moon_width
+            moon_start_x = (0 - moon_width)
+
+        # add statements to change position of mice
+        if mice_start_y > (0 - mice_height):
+            mice_y = -5
+        if mice_start_y <= (0 - mice_height):
+            mice_y = 0
 
         # change asset locations
         cannon_start_x += cannon_x
+        mice_start_y += mice_y
         moon_start_x += moon_x
         # set background colour
         screen.fill(grey)
         # display assets
         cannon(cannon_start_x, cannon_start_y)
+        mice(mice_start_x, mice_start_y)
         moon(moon_start_x, moon_start_y)
         grass(grass_start_x, grass_start_y)
         # load new frames each tick
