@@ -36,7 +36,7 @@ def main():
     cannon_width = 60
     cannon_height = 100
     cannon_start_x = (display_width * 0.45)
-    cannon_start_y = (display_height - (cannon_height + grass_height))
+    cannon_start_y = (display_height - (cannon_height + (grass_height / 2)))
     cannon_x = 0
     cannon_y = 0
     moon_width = 200
@@ -96,8 +96,8 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if mice_start_y <= (0 - mice_height):
-                        mice_start_y = (cannon_start_y - mice_height)
-                        mice_start_x = (cannon_start_x + mice_width)
+                        mice_start_y = (cannon_start_y + (mice_height / 2))
+                        mice_start_x = (cannon_start_x + ((cannon_width - mice_width) / 2))
                     if mice_start_y > 5:
                         break
 
@@ -121,10 +121,10 @@ def main():
         # set background colour
         screen.fill(grey)
         # display assets
-        cannon(cannon_start_x, cannon_start_y)
-        mice(mice_start_x, mice_start_y)
-        moon(moon_start_x, moon_start_y)
         grass(grass_start_x, grass_start_y)
+        mice(mice_start_x, mice_start_y)
+        cannon(cannon_start_x, cannon_start_y)
+        moon(moon_start_x, moon_start_y)
         # load new frames each tick
         pygame.display.update()
         # set the frame rate 
