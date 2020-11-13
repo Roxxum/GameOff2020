@@ -29,45 +29,44 @@ def main():
     green = (0,255,0)
     blue = (0,0,255)
     screen = pygame.display.set_mode((display_width,display_height))
-    cannon_start_x = (display_width * 0.45)
-    cannon_start_y = (display_height * 0.8)
-    cannon_x = 0
-    cannon_y = 0
+    grass_width = 800
+    grass_height = 20
+    grass_start_x = (display_width - grass_width)
+    grass_start_y = (display_height - grass_height)
     cannon_width = 60
     cannon_height = 100
-    moon_start_x = (display_width * 0.9)
-    moon_start_y = (display_height * 0.1)
-    moon_x = 0
-    moon_y = 0
+    cannon_start_x = (display_width * 0.45)
+    cannon_start_y = (display_height - (cannon_height + grass_height))
+    cannon_x = 0
+    cannon_y = 0
     moon_width = 200
     moon_height = 200
+    moon_start_x = (moon_width * 0.0)
+    moon_start_y = (moon_height * 0.0)
+    moon_x = 0
+    moon_y = 0
+    mice_width = 50
+    mice_height = 60
     mice_start_x = (display_width * 0.45)
     mice_start_y = (display_height * 0.8)
     mice_x = 0
     mice_y = 0
-    mice_width = 25
-    mice_height = 100
-    grass_start_x = (display_width * 0.45)
-    grass_start_y = (display_height * 0.8)
-    grass_x = 0
-    grass_y = 0
-    grass_width = 50
-    grass_height = 100
      
     # define a variable to control the main loop
     running = True
 
-    # define a function to control the player
+    # define functions to control the assets
     def cannon(cannon_start_x,cannon_start_y):
         screen.blit(cannonIMG, (cannon_start_x, cannon_start_y))
 
-    # define a function to control the moon
     def moon(moon_start_x,moon_start_y):
         screen.blit(moonIMG, (moon_start_x, moon_start_y))
     
-    # define a function to control the mice
     def mice(mice_start_x,mice_start_y):
         screen.blit(miceIMG, (mice_start_x, mice_start_y))
+
+    def grass(grass_start_x,grass_start_y):
+        screen.blit(grassIMG, (grass_start_x, grass_start_y))
      
     # main loop
     while running:
@@ -93,13 +92,23 @@ def main():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     cannon_x = 0
+
+        # add statements to change position of moon
+        if moon_start_x < display_width:
+            moon_x = 5
+        if moon_start_x > display_width:
+            moon_x = 0
+            moon_start_x = 0 - moon_width
+
         # change asset locations
         cannon_start_x += cannon_x
+        moon_start_x += moon_x
         # set background colour
         screen.fill(grey)
         # display assets
         cannon(cannon_start_x, cannon_start_y)
         moon(moon_start_x, moon_start_y)
+        grass(grass_start_x, grass_start_y)
         # load new frames each tick
         pygame.display.update()
         # set the frame rate 
