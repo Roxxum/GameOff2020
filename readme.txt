@@ -1,1 +1,1 @@
-This is a trash game where you shoot mice at a cheese moon for some reason
+This is a rad game about Chonk and his mission to devour the moon. 
