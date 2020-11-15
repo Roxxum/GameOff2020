@@ -1,5 +1,6 @@
 # import the pygame module, so you can use it
 import pygame
+import math
  
 # define a main function
 def main():
@@ -45,6 +46,8 @@ def main():
     moon_current_y = (moon_height * 0.0)
     moon_change_x = 0
     moon_change_y = 0
+    moon_change_height = 0
+    moon_change_width = 0
     mice_width = 50
     mice_height = 60
     mice_current_x = (0 - mice_width)
@@ -56,18 +59,23 @@ def main():
     running = True
 
     # define functions to control the assets
-    def cannon(cannon_current_x,cannon_current_y):
+    def cannon(cannon_current_x, cannon_current_y):
         screen.blit(cannonIMG, (cannon_current_x, cannon_current_y))
 
-    def moon(moon_current_x,moon_current_y):
-        screen.blit(moonIMG, (moon_current_x, moon_current_y))
+    def moon(moon_current_x, moon_current_y):
+        screen.blit(pygame.transform.scale(moonIMG, (moon_width, moon_height)), (moon_current_x, moon_current_y))
     
-    def mice(mice_current_x,mice_current_y):
+    def mice(mice_current_x, mice_current_y):
         screen.blit(miceIMG, (mice_current_x, mice_current_y))
 
-    def grass(grass_current_x,grass_current_y):
+    def grass(grass_current_x, grass_current_y):
         screen.blit(grassIMG, (grass_current_x, grass_current_y))
-     
+
+    def collision(moon_current_x, moon_current_y, mice_current_x, mice_current_y):
+        distance = math.sqrt((math.pow(moon_current_x - mice_current_x, 2)) + (math.pow(moon_current_y - mice_current_y, 2)))
+        if distance < (moon_height / 2) and mice_current_y > 0:
+            return True
+
     # main loop
     while running:
         # event handling, gets all event from the event queue
@@ -114,13 +122,24 @@ def main():
         if mice_current_y <= (0 - mice_height):
             mice_change_y = 0
 
-        # change asset locations
+        # check to see if collision occured
+        collisioncheck = collision(moon_current_x, moon_current_y, mice_current_x, mice_current_y)
+        if collisioncheck:
+            mice_current_y = (0 - mice_height)
+            moon_change_width = -10
+            moon_change_height = -10
+
+        # change asset variables
         cannon_current_x += cannon_change_x
         mice_current_y += mice_change_y
         moon_current_x += moon_change_x
-        # set background colour
+        moon_height += moon_change_height
+        moon_width += moon_change_width
+        moon_change_height = 0
+        moon_change_width = 0
+
+        # draw assets
         screen.fill(grey)
-        # display assets
         grass(grass_current_x, grass_current_y)
         mice(mice_current_x, mice_current_y)
         cannon(cannon_current_x, cannon_current_y)
@@ -128,7 +147,7 @@ def main():
         # load new frames each tick
         pygame.display.update()
         # set the frame rate 
-        clock.tick(15)
+        clock.tick(30)
      
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)
