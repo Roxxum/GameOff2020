@@ -1,4 +1,4 @@
-# import the pygame module, so you can use it
+# import needed modules
 import pygame
 import math
  
@@ -23,13 +23,8 @@ def main():
     clock = pygame.time.Clock()
     display_width = 800
     display_height = 600
-    black = (0,0,0)
-    white = (255,255,255)
-    grey = (25,25,25)
-    red = (255,0,0)
-    green = (0,255,0)
-    blue = (0,0,255)
     screen = pygame.display.set_mode((display_width,display_height))
+    grey = (25,25,25)
     grass_width = 800
     grass_height = 20
     grass_current_x = (display_width - grass_width)
@@ -48,12 +43,9 @@ def main():
     moon_change_y = 0
     moon_change_height = 0
     moon_change_width = 0
+    miceList = []
     mice_width = 50
     mice_height = 60
-    mice_current_x = (0 - mice_width)
-    mice_current_y = (0 - mice_height)
-    mice_change_x = 0
-    mice_change_y = 0
      
     # define a variable to control the main loop
     running = True
@@ -71,19 +63,23 @@ def main():
     def grass(grass_current_x, grass_current_y):
         screen.blit(grassIMG, (grass_current_x, grass_current_y))
 
-    def collision(moon_current_x, moon_current_y, mice_current_x, mice_current_y):
+    def collision(moon_current_x, moon_current_y, mice_current_x, mice_current_y):    
         distance = math.sqrt((math.pow(moon_current_x - mice_current_x, 2)) + (math.pow(moon_current_y - mice_current_y, 2)))
         if distance < (moon_height / 2) and mice_current_y > 0:
             return True
 
     # main loop
     while running:
+        
         # event handling, gets all event from the event queue
         for event in pygame.event.get():
+            
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT:
+                
                 # change the value to False, to exit the main loop
                 running = False
+            
             # add statements to move cannon with key press
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -103,11 +99,12 @@ def main():
             # add statements to shoot mice
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if mice_current_y <= (0 - mice_height):
-                        mice_current_y = (cannon_current_y + ((cannon_height - mice_height) / 2))
-                        mice_current_x = (cannon_current_x + ((cannon_width - mice_width) / 2))
-                    if mice_current_y > 5:
-                        break
+                    mouse = {}
+                    mouse["mice_current_x"] = (cannon_current_x + ((cannon_width - mice_width) / 2))
+                    mouse["mice_current_y"] = (cannon_current_y + ((cannon_height - mice_height) / 2))
+                    mouse["mice_change_x"] = 0
+                    mouse["mice_change_y"] = 0
+                    miceList.append(mouse)
 
         # add statements to change position of moon
         if moon_current_x < display_width:
@@ -117,21 +114,29 @@ def main():
             moon_current_x = (0 - moon_width)
 
         # add statements to change position of mice
-        if mice_current_y > (0 - mice_height):
-            mice_change_y = -5
-        if mice_current_y <= (0 - mice_height):
-            mice_change_y = 0
+        badMice = []
+        for mouseIndex in range(len(miceList)):
+            mouse = miceList[mouseIndex]
+            if mouse["mice_current_y"] > (0 - mice_height):
+                mouse["mice_change_y"] = -5
+            if mouse["mice_current_y"] <= (0 - mice_height):
+                badMice.append(mouseIndex)
 
-        # check to see if collision occured
-        collisioncheck = collision(moon_current_x, moon_current_y, mice_current_x, mice_current_y)
-        if collisioncheck:
-            mice_current_y = (0 - mice_height)
-            moon_change_width = -10
-            moon_change_height = -10
+            # check to see if collision occured and reset assets if true
+            collisioncheck = collision(moon_current_x, moon_current_y, mouse["mice_current_x"], mouse["mice_current_y"])
+            if collisioncheck:
+                badMice.append(mouseIndex)
+                moon_change_width = -10
+                moon_change_height = -10
+            
+            mouse["mice_current_y"] += mouse["mice_change_y"]
+
+        # add statement to remove mice that are off the screen
+        for mouse in range(len(badMice)):
+            miceList.remove(miceList[badMice[mouse]])
 
         # change asset variables
         cannon_current_x += cannon_change_x
-        mice_current_y += mice_change_y
         moon_current_x += moon_change_x
         moon_height += moon_change_height
         moon_width += moon_change_width
@@ -141,14 +146,18 @@ def main():
         # draw assets
         screen.fill(grey)
         grass(grass_current_x, grass_current_y)
-        mice(mice_current_x, mice_current_y)
+        for mouseIndex in range(len(miceList)):
+            mouse = miceList[mouseIndex]
+            mice(mouse["mice_current_x"], mouse["mice_current_y"])
         cannon(cannon_current_x, cannon_current_y)
         moon(moon_current_x, moon_current_y)
+        
         # load new frames each tick
         pygame.display.update()
+        
         # set the frame rate 
         clock.tick(30)
-     
+
 # run the main function only if this module is executed as the main script
 # (if you import this as a module then nothing is executed)
 if __name__=="__main__":
